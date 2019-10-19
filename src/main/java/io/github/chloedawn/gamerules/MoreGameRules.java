@@ -255,7 +255,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
+   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
    *
    * @param name The unique name of the rule
    * @param notifier The notifier callback when the rule is updated by the server
@@ -269,7 +269,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code false}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
@@ -311,7 +311,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code ""}
+   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
    *
    * @param name The unique name of the rule
    * @param notifier The notifier callback when the rule is updated by the server
@@ -325,7 +325,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code false}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
