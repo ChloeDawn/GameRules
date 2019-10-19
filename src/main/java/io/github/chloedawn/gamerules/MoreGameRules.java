@@ -158,7 +158,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to a value of {@code 0}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
@@ -213,7 +213,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to a value of {@code 0.0}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
@@ -269,7 +269,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
@@ -325,7 +325,7 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code false}
+   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
    *
    * @param name The unique name of the rule
    * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
