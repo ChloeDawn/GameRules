@@ -226,6 +226,66 @@ public final class MoreGameRules {
   }
 
   /**
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to the given {@code defaultValue}
+   *
+   * @param name The unique name of the rule
+   * @param valueType The enum's type
+   * @param defaultValue The default value of the rule
+   * @param notifier The notifier callback when the rule is updated by the server
+   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+   * @throws IllegalStateException If a rule by the given {@code name} already exists
+   */
+  @Beta
+  @Contract("_, _, _, _ -> new")
+  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
+    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue, notifier));
+  }
+
+  /**
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to the given {@code defaultValue}
+   *
+   * @param name The unique name of the rule
+   * @param valueType The enum's type
+   * @param defaultValue The default value of the rule
+   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+   * @throws IllegalStateException If a rule by the given {@code name} already exists
+   */
+  @Beta
+  @Contract("_, _, _ -> new")
+  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue) {
+    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue));
+  }
+
+  /**
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to a value of {@link EnumRule#defaultValue}
+   *
+   * @param name The unique name of the rule
+   * @param valueType The enum's type
+   * @param notifier The notifier callback when the rule is updated by the server
+   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+   * @throws IllegalStateException If a rule by the given {@code name} already exists
+   */
+  @Beta
+  @Contract("_, _, _ -> new")
+  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
+    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType), notifier));
+  }
+
+  /**
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to a value of {@link EnumRule#defaultValue}
+   *
+   * @param name The unique name of the rule
+   * @param valueType The enum's type
+   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+   * @throws IllegalStateException If a rule by the given {@code name} already exists
+   */
+  @Beta
+  @Contract("_, _ -> new")
+  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType) {
+    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType)));
+  }
+
+  /**
    * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to the given {@code defaultValue}
    *
    * @param name The unique name of the rule
