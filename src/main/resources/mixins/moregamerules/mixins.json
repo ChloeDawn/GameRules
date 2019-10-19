@@ -6,6 +6,7 @@
   "package": "io.github.chloedawn.gamerules.mixin",
   "mixins": [
     "BooleanRuleFactory",
+    "GameRulesAccessor",
     "GameRulesRegistrar",
     "IntRuleFactory",
     "RuleTypeFactoryAccessor",

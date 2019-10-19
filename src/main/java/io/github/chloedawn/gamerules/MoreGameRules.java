@@ -19,6 +19,7 @@ package io.github.chloedawn.gamerules;
 import com.google.common.annotations.Beta;
 import com.google.common.reflect.Reflection;
 import io.github.chloedawn.gamerules.mixin.BooleanRuleFactory;
+import io.github.chloedawn.gamerules.mixin.GameRulesAccessor;
 import io.github.chloedawn.gamerules.mixin.GameRulesRegistrar;
 import io.github.chloedawn.gamerules.mixin.IntRuleFactory;
 import net.minecraft.server.MinecraftServer;
@@ -29,6 +30,7 @@ import net.minecraft.world.GameRules.RuleKey;
 import net.minecraft.world.GameRules.RuleType;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public final class MoreGameRules {
@@ -38,6 +40,29 @@ public final class MoreGameRules {
   }
 
   private MoreGameRules() {
+  }
+
+  /**
+   * Searches registered game rules for one matching the given {@code name}
+   *
+   * @param name The name of the game rule
+   * @return An optional of the rule key for the given {@code name}
+   */
+  public static Optional<RuleKey<?>> findRule(final String name) {
+    return GameRulesAccessor.moregamerules$getRules().keySet().stream()
+      .filter(key -> name.equals(key.getName()))
+      .findFirst();
+  }
+
+  /**
+   * Retrieves the registered game rule for the given {@code name}
+   *
+   * @param name The name of the game rule
+   * @return The rule key for the given {@code name}
+   * @throws NoSuchRuleException If no rule exists for the given {@code name}
+   */
+  public static RuleKey<?> getRule(final String name) {
+    return findRule(name).orElseThrow(() -> new NoSuchRuleException(name));
   }
 
   /**
