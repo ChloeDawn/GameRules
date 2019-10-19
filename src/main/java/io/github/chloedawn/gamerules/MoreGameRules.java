@@ -226,7 +226,8 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to the given {@code defaultValue}
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+   * defaulting to the given {@code defaultValue}
    *
    * @param name The unique name of the rule
    * @param valueType The enum's type
@@ -242,7 +243,8 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to the given {@code defaultValue}
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+   * defaulting to the given {@code defaultValue}
    *
    * @param name The unique name of the rule
    * @param valueType The enum's type
@@ -257,7 +259,8 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to a value of {@link EnumRule#defaultValue}
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+   * defaulting to a value of {@link EnumRule#defaultValue}
    *
    * @param name The unique name of the rule
    * @param valueType The enum's type
@@ -272,7 +275,8 @@ public final class MoreGameRules {
   }
 
   /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, defaulting to a value of {@link EnumRule#defaultValue}
+   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+   * defaulting to a value of {@link EnumRule#defaultValue}
    *
    * @param name The unique name of the rule
    * @param valueType The enum's type
