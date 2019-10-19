@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "moregamerules",
+  "name": "More Game Rules",
+  "version": "$version",
+  "description": "A library for adding more game rules to levels",
+  "license": "Apache-2.0",
+  "depends": {
+    "fabricloader": ">=0.6.3"
+  },
+  "mixins": [
+    "mixins/moregamerules/mixins.json"
+  ],
+  "authors": [
+    {
+      "name": "Chloe Dawn",
+      "contact": {
+        "homepage": "https://git.io/Jen3g"
+      }
+    }
+  ],
+  "contact": {
+    "homepage": "https://git.io/Je89Y",
+    "sources": "https://git.io/Je89Y",
+    "issues": "https://git.io/Je89O"
+  }
+}
