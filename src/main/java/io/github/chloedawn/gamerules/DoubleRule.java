@@ -23,6 +23,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
@@ -30,6 +32,8 @@ import java.util.function.BiConsumer;
 
 @Beta
 public final class DoubleRule extends Rule<DoubleRule> {
+  private static final Logger LOGGER = LogManager.getLogger();
+
   private double value;
 
   @Contract(pure = true)
@@ -46,6 +50,17 @@ public final class DoubleRule extends Rule<DoubleRule> {
   @Contract("_ -> new")
   static RuleType<DoubleRule> of(final double value) {
     return of(value, (server, rule) -> {});
+  }
+
+  private static double parseDouble(final String string) {
+    if (!string.isEmpty()) {
+      try {
+        return Double.parseDouble(string);
+      } catch (final NumberFormatException e) {
+        LOGGER.warn("Failed to parse double {}", string);
+      }
+    }
+    return 0.0;
   }
 
   @Contract(pure = true)
@@ -68,7 +83,7 @@ public final class DoubleRule extends Rule<DoubleRule> {
   @Override
   @Contract(mutates = "this")
   protected void setFromString(final String string) {
-    this.value = Double.parseDouble(string);
+    this.value = parseDouble(string);
   }
 
   @Override

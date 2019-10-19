@@ -23,6 +23,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nullable;
@@ -30,6 +32,8 @@ import java.util.function.BiConsumer;
 
 @Beta
 public final class FloatRule extends Rule<FloatRule> {
+  private static final Logger LOGGER = LogManager.getLogger();
+
   private float value;
 
   @Contract(pure = true)
@@ -46,6 +50,17 @@ public final class FloatRule extends Rule<FloatRule> {
   @Contract("_ -> new")
   static RuleType<FloatRule> of(final float value) {
     return of(value, (server, rule) -> {});
+  }
+
+  private static float parseFloat(final String string) {
+    if (!string.isEmpty()) {
+      try {
+        return Float.parseFloat(string);
+      } catch (final NumberFormatException e) {
+        LOGGER.warn("Failed to parse float {}", string);
+      }
+    }
+    return 0.0F;
   }
 
   @Contract(pure = true)
@@ -68,7 +83,7 @@ public final class FloatRule extends Rule<FloatRule> {
   @Override
   @Contract(mutates = "this")
   protected void setFromString(final String string) {
-    this.value = Float.parseFloat(string);
+    this.value = parseFloat(string);
   }
 
   @Override
