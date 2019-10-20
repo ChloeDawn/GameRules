@@ -16,19 +16,15 @@
 
 package io.github.chloedawn.gamerules.mixin;
 
+import io.github.chloedawn.gamerules.Notifiers;
 import io.github.chloedawn.gamerules.RuleTypeFactory;
-import org.jetbrains.annotations.Contract;
+import net.minecraft.world.GameRules.Rule;
+import net.minecraft.world.GameRules.RuleType;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.gen.Accessor;
 
-// TODO: Replace with constructor invoker in Mixin 0.8
-@Pseudo
-@Mixin(targets = "net.minecraft.world.GameRules$RuleType")
-public interface RuleTypeFactoryAccessor {
-  @Contract(pure = true)
-  @Accessor(value = "RULE_TYPE_FACTORY", remap = false)
-  static RuleTypeFactory getRuleTypeFactory() {
-    throw new AssertionError();
-  }
+@Mixin(RuleType.class)
+abstract class RuleTypeMixin<T extends Rule<T>> {
+  private static final RuleTypeFactory RULE_TYPE_FACTORY = RuleType::new;
+
+  private final Notifiers<T> additionalNotifiers = Notifiers.create();
 }

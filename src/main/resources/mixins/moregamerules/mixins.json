@@ -9,8 +9,9 @@
     "GameRulesAccessor",
     "GameRulesRegistrar",
     "IntRuleFactory",
-    "RuleTypeFactoryAccessor",
-    "RuleTypeFactoryMixin"
+    "RuleMixin",
+    "RuleTypeAccessors",
+    "RuleTypeMixin"
   ],
   "refmap": "$refmap",
   "injectors": {

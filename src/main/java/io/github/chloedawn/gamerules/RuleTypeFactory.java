@@ -17,7 +17,7 @@
 package io.github.chloedawn.gamerules;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import io.github.chloedawn.gamerules.mixin.RuleTypeFactoryAccessor;
+import io.github.chloedawn.gamerules.mixin.RuleTypeAccessors;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 public interface RuleTypeFactory {
   @Contract(pure = true)
   static RuleTypeFactory getInstance() {
-    return RuleTypeFactoryAccessor.getRuleTypeFactory();
+    return RuleTypeAccessors.getRuleTypeFactory();
   }
 
   @Contract(value = "_, _, _ -> new", pure = true)

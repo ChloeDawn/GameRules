@@ -22,14 +22,17 @@ import io.github.chloedawn.gamerules.mixin.BooleanRuleFactory;
 import io.github.chloedawn.gamerules.mixin.GameRulesAccessor;
 import io.github.chloedawn.gamerules.mixin.GameRulesRegistrar;
 import io.github.chloedawn.gamerules.mixin.IntRuleFactory;
+import io.github.chloedawn.gamerules.mixin.RuleTypeAccessors;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.GameRules.BooleanRule;
 import net.minecraft.world.GameRules.IntRule;
+import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleKey;
 import net.minecraft.world.GameRules.RuleType;
 import org.jetbrains.annotations.Contract;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
@@ -63,6 +66,22 @@ public final class MoreGameRules {
    */
   public static RuleKey<?> getRule(final String name) {
     return findRule(name).orElseThrow(() -> new NoSuchRuleException(name));
+  }
+
+  /**
+   * Adds the given {@code notifier} to the registered rule type of the given {@code key}
+   *
+   * @param key The rule key to add a notifier for
+   * @param notifier The additional notifier to be added
+   * @throws IllegalArgumentException If the {@code key} is not registered
+   */
+  @SuppressWarnings("unchecked")
+  public static <T extends Rule<T>> void addNotifier(final RuleKey<T> key, final BiConsumer<MinecraftServer, T> notifier) {
+    @Nullable final RuleType<?> type = GameRulesAccessor.moregamerules$getRules().get(key);
+    if (type == null) {
+      throw new IllegalArgumentException("Game rule '" + key.getName() + "' is not registered");
+    }
+    ((MutableNotifiers<T>) ((RuleTypeAccessors<T>) type).getAdditionalNotifiers()).add(notifier);
   }
 
   /**
