@@ -45,7 +45,7 @@ public final class DoubleRule extends Rule<DoubleRule> {
 
   @Contract("_, _ -> new")
   static RuleType<DoubleRule> of(final double value, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
-    Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number");
+    Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number %s", value);
     return RuleTypeFactory.getInstance().make(DoubleArgumentType::doubleArg, type -> new DoubleRule(type, value), notifier);
   }
 
@@ -76,6 +76,7 @@ public final class DoubleRule extends Rule<DoubleRule> {
 
   @Contract(mutates = "this")
   public void set(final double value, @Nullable final MinecraftServer server) {
+    Preconditions.checkArgument(Double.isFinite(value), "Value must be a number %s", value);
     this.value = value;
     this.notify(server);
   }
@@ -83,7 +84,13 @@ public final class DoubleRule extends Rule<DoubleRule> {
   @Override
   @Contract(mutates = "this")
   protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
-    this.value = DoubleArgumentType.getDouble(context, name);
+    final double value = DoubleArgumentType.getDouble(context, name);
+    if (Double.isFinite(value)) {
+      this.value = value;
+    } else {
+      LOGGER.warn("Double argument was not a number {}", value);
+      this.value = 0.0F;
+    }
   }
 
   @Override

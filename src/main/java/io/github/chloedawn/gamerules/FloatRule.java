@@ -45,7 +45,7 @@ public final class FloatRule extends Rule<FloatRule> {
 
   @Contract("_, _ -> new")
   static RuleType<FloatRule> of(final float value, final BiConsumer<MinecraftServer, FloatRule> notifier) {
-    Preconditions.checkArgument(Float.isFinite(value), "Default value must be a number");
+    Preconditions.checkArgument(Float.isFinite(value), "Default value must be a number %s", value);
     return RuleTypeFactory.getInstance().make(FloatArgumentType::floatArg, type -> new FloatRule(type, value), notifier);
   }
 
@@ -76,6 +76,7 @@ public final class FloatRule extends Rule<FloatRule> {
 
   @Contract(mutates = "this")
   public void set(final float value, @Nullable final MinecraftServer server) {
+    Preconditions.checkArgument(Float.isFinite(value), "Value must be a number %s", value);
     this.value = value;
     this.notify(server);
   }
@@ -83,7 +84,13 @@ public final class FloatRule extends Rule<FloatRule> {
   @Override
   @Contract(mutates = "this")
   protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
-    this.value = FloatArgumentType.getFloat(context, name);
+    final float value = FloatArgumentType.getFloat(context, name);
+    if (Float.isFinite(value)) {
+      this.value = value;
+    } else {
+      LOGGER.warn("Float argument was not a number {}", value);
+      this.value = 0.0F;
+    }
   }
 
   @Override
