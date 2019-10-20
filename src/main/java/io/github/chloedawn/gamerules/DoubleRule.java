@@ -17,6 +17,7 @@
 package io.github.chloedawn.gamerules;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Preconditions;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.MinecraftServer;
@@ -44,6 +45,7 @@ public final class DoubleRule extends Rule<DoubleRule> {
 
   @Contract("_, _ -> new")
   static RuleType<DoubleRule> of(final double value, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
+    Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number");
     return RuleTypeFactory.getInstance().make(DoubleArgumentType::doubleArg, type -> new DoubleRule(type, value), notifier);
   }
 
@@ -55,7 +57,11 @@ public final class DoubleRule extends Rule<DoubleRule> {
   private static double parseDouble(final String string) {
     if (!string.isEmpty()) {
       try {
-        return Double.parseDouble(string);
+        final double value = Double.parseDouble(string);
+        if (Double.isFinite(value)) {
+          return value;
+        }
+        LOGGER.warn("Parsed double was not a number {}", string);
       } catch (final NumberFormatException e) {
         LOGGER.warn("Failed to parse double {}", string);
       }

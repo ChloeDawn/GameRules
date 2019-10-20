@@ -17,6 +17,7 @@
 package io.github.chloedawn.gamerules;
 
 import com.google.common.annotations.Beta;
+import com.google.common.base.Preconditions;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.MinecraftServer;
@@ -44,6 +45,7 @@ public final class FloatRule extends Rule<FloatRule> {
 
   @Contract("_, _ -> new")
   static RuleType<FloatRule> of(final float value, final BiConsumer<MinecraftServer, FloatRule> notifier) {
+    Preconditions.checkArgument(Float.isFinite(value), "Default value must be a number");
     return RuleTypeFactory.getInstance().make(FloatArgumentType::floatArg, type -> new FloatRule(type, value), notifier);
   }
 
@@ -55,7 +57,11 @@ public final class FloatRule extends Rule<FloatRule> {
   private static float parseFloat(final String string) {
     if (!string.isEmpty()) {
       try {
-        return Float.parseFloat(string);
+        final float value = Float.parseFloat(string);
+        if (Float.isFinite(value)) {
+          return value;
+        }
+        LOGGER.warn("Parsed float was not a number {}", string);
       } catch (final NumberFormatException e) {
         LOGGER.warn("Failed to parse float {}", string);
       }
