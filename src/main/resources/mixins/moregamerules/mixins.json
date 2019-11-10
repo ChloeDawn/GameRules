@@ -9,6 +9,7 @@
     "GameRulesAccessor",
     "GameRulesRegistrar",
     "IntRuleFactory",
+    "IntRuleMixin",
     "RuleMixin",
     "RuleTypeAccessors",
     "RuleTypeMixin"
