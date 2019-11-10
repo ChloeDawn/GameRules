@@ -27,9 +27,9 @@ import java.util.Map;
 
 @Mixin(GameRules.class)
 public interface GameRulesAccessor {
-  @Accessor("RULES")
-  @Contract(pure = true)
-  static Map<RuleKey<?>, RuleType<?>> moregamerules$getRules() {
-    throw new AssertionError();
-  }
+	@Accessor("RULES")
+	@Contract(pure = true)
+	static Map<RuleKey<?>, RuleType<?>> moregamerules$getRules() {
+		throw new AssertionError();
+	}
 }

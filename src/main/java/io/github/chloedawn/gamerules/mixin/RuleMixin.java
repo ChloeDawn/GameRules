@@ -29,14 +29,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Rule.class)
 abstract class RuleMixin<T extends Rule<T>> {
-  @Shadow @Final private RuleType<T> type;
+	@Shadow @Final private RuleType<T> type;
 
-  @Shadow
-  protected abstract T getThis();
+	@Shadow
+	protected abstract T getThis();
 
-  @SuppressWarnings("unchecked")
-  @Inject(method = "notify", at = @At(value = "INVOKE", target = "Ljava/util/function/BiConsumer;accept(Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER))
-  private void moregamerules$onEachNotifier(final MinecraftServer server, final CallbackInfo ci) {
-    ((RuleTypeAccessors<T>) this.type).getAdditionalNotifiers().onEach(server, this.getThis());
-  }
+	@SuppressWarnings("unchecked")
+	@Inject(method = "notify", at = @At(value = "INVOKE", target = "Ljava/util/function/BiConsumer;accept(Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER))
+	private void moregamerules$onEachNotifier(final MinecraftServer server, final CallbackInfo ci) {
+		((RuleTypeAccessors<T>) this.type).getAdditionalNotifiers().onEach(server, this.getThis());
+	}
 }

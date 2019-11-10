@@ -28,9 +28,9 @@ import java.util.function.BiConsumer;
 @Mixin(BooleanRule.class)
 @SuppressWarnings("Contract") // Contract is not violated at runtime
 public interface BooleanRuleFactory {
-  @Invoker("of")
-  @Contract(value = "_, _ -> new", pure = true)
-  static RuleType<BooleanRule> moregamerules$make(final boolean defaultValue, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
-    throw new AssertionError();
-  }
+	@Invoker("of")
+	@Contract(value = "_, _ -> new", pure = true)
+	static RuleType<BooleanRule> moregamerules$make(final boolean defaultValue, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
+		throw new AssertionError();
+	}
 }

@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(RuleType.class)
 abstract class RuleTypeMixin<T extends Rule<T>> {
-  private static final RuleTypeFactory RULE_TYPE_FACTORY = RuleType::new;
+	private static final RuleTypeFactory RULE_TYPE_FACTORY = RuleType::new;
 
-  private final Notifiers<T> additionalNotifiers = Notifiers.create();
+	private final Notifiers<T> additionalNotifiers = Notifiers.create();
 }

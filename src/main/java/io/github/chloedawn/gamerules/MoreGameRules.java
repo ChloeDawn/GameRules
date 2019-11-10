@@ -37,386 +37,386 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public final class MoreGameRules {
-  static {
-    // Ensure classes have been loaded and mixins applied before any static calls are made
-    Reflection.initialize(GameRules.class, BooleanRule.class, IntRule.class, RuleType.class);
-  }
+	static {
+		// Ensure classes have been loaded and mixins applied before any static calls are made
+		Reflection.initialize(GameRules.class, BooleanRule.class, IntRule.class, RuleType.class);
+	}
 
-  private MoreGameRules() {
-  }
+	private MoreGameRules() {
+	}
 
-  /**
-   * Searches registered game rules for one matching the given {@code name}
-   *
-   * @param name The name of the game rule
-   * @return An optional of the rule key for the given {@code name}
-   */
-  public static Optional<RuleKey<?>> findRule(final String name) {
-    return GameRulesAccessor.moregamerules$getRules().keySet().stream()
-      .filter(key -> name.equals(key.getName()))
-      .findFirst();
-  }
+	/**
+	 * Searches registered game rules for one matching the given {@code name}
+	 *
+	 * @param name The name of the game rule
+	 * @return An optional of the rule key for the given {@code name}
+	 */
+	public static Optional<RuleKey<?>> findRule(final String name) {
+		return GameRulesAccessor.moregamerules$getRules().keySet().stream()
+			.filter(key -> name.equals(key.getName()))
+			.findFirst();
+	}
 
-  /**
-   * Retrieves the registered game rule for the given {@code name}
-   *
-   * @param name The name of the game rule
-   * @return The rule key for the given {@code name}
-   * @throws NoSuchRuleException If no rule exists for the given {@code name}
-   */
-  public static RuleKey<?> getRule(final String name) {
-    return findRule(name).orElseThrow(() -> new NoSuchRuleException(name));
-  }
+	/**
+	 * Retrieves the registered game rule for the given {@code name}
+	 *
+	 * @param name The name of the game rule
+	 * @return The rule key for the given {@code name}
+	 * @throws NoSuchRuleException If no rule exists for the given {@code name}
+	 */
+	public static RuleKey<?> getRule(final String name) {
+		return findRule(name).orElseThrow(() -> new NoSuchRuleException(name));
+	}
 
-  /**
-   * Adds the given {@code notifier} to the registered rule type of the given {@code key}
-   *
-   * @param key The rule key to add a notifier for
-   * @param notifier The additional notifier to be added
-   * @throws IllegalArgumentException If the {@code key} is not registered
-   */
-  @SuppressWarnings("unchecked")
-  public static <T extends Rule<T>> void addNotifier(final RuleKey<T> key, final BiConsumer<MinecraftServer, T> notifier) {
-    @Nullable final RuleType<?> type = GameRulesAccessor.moregamerules$getRules().get(key);
-    if (type == null) {
-      throw new IllegalArgumentException("Game rule '" + key.getName() + "' is not registered");
-    }
-    ((MutableNotifiers<T>) ((RuleTypeAccessors<T>) type).getAdditionalNotifiers()).add(notifier);
-  }
+	/**
+	 * Adds the given {@code notifier} to the registered rule type of the given {@code key}
+	 *
+	 * @param key The rule key to add a notifier for
+	 * @param notifier The additional notifier to be added
+	 * @throws IllegalArgumentException If the {@code key} is not registered
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends Rule<T>> void addNotifier(final RuleKey<T> key, final BiConsumer<MinecraftServer, T> notifier) {
+		@Nullable final RuleType<?> type = GameRulesAccessor.moregamerules$getRules().get(key);
+		if (type == null) {
+			throw new IllegalArgumentException("Game rule '" + key.getName() + "' is not registered");
+		}
+		((MutableNotifiers<T>) ((RuleTypeAccessors<T>) type).getAdditionalNotifiers()).add(notifier);
+	}
 
-  /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _, _ -> new")
-  public static RuleKey<BooleanRule> makeBooleanRule(final String name, final boolean defaultValue, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _, _ -> new")
+	public static RuleKey<BooleanRule> makeBooleanRule(final String name, final boolean defaultValue, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _ -> new")
-  public static RuleKey<BooleanRule> makeBooleanRule(final String name, final boolean defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(defaultValue, (server, rule) -> {}));
-  }
+	/**
+	 * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _ -> new")
+	public static RuleKey<BooleanRule> makeBooleanRule(final String name, final boolean defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(defaultValue, (server, rule) -> {}));
+	}
 
-  /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
-   *
-   * @param name The unique name of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _ -> new")
-  public static RuleKey<BooleanRule> makeBooleanRule(final String name, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(false, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+	 *
+	 * @param name The unique name of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _ -> new")
+	public static RuleKey<BooleanRule> makeBooleanRule(final String name, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(false, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
-   *
-   * @param name The unique name of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_ -> new")
-  public static RuleKey<BooleanRule> makeBooleanRule(final String name) {
-    return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(false, (server, rule) -> {}));
-  }
+	/**
+	 * Creates and registers a new {@link BooleanRule} by the given {@code name}, defaulting to a value of {@code false}
+	 *
+	 * @param name The unique name of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_ -> new")
+	public static RuleKey<BooleanRule> makeBooleanRule(final String name) {
+		return GameRulesRegistrar.moregamerules$register(name, BooleanRuleFactory.moregamerules$make(false, (server, rule) -> {}));
+	}
 
-  /**
-   * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _, _ -> new")
-  public static RuleKey<IntRule> makeIntRule(final String name, final int defaultValue, final BiConsumer<MinecraftServer, IntRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _, _ -> new")
+	public static RuleKey<IntRule> makeIntRule(final String name, final int defaultValue, final BiConsumer<MinecraftServer, IntRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _ -> new")
-  public static RuleKey<IntRule> makeIntRule(final String name, final int defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(defaultValue, (server, rule) -> {}));
-  }
+	/**
+	 * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _ -> new")
+	public static RuleKey<IntRule> makeIntRule(final String name, final int defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(defaultValue, (server, rule) -> {}));
+	}
 
-  /**
-   * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to a value of {@code 0}
-   *
-   * @param name The unique name of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_, _ -> new")
-  public static RuleKey<IntRule> makeIntRule(final String name, final BiConsumer<MinecraftServer, IntRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(0, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to a value of {@code 0}
+	 *
+	 * @param name The unique name of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_, _ -> new")
+	public static RuleKey<IntRule> makeIntRule(final String name, final BiConsumer<MinecraftServer, IntRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(0, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to a value of {@code 0}
-   *
-   * @param name The unique name of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Contract("_ -> new")
-  public static RuleKey<IntRule> makeIntRule(final String name) {
-    return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(0, (server, rule) -> {}));
-  }
+	/**
+	 * Creates and registers a new {@link IntRule} by the given {@code name}, defaulting to a value of {@code 0}
+	 *
+	 * @param name The unique name of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Contract("_ -> new")
+	public static RuleKey<IntRule> makeIntRule(final String name) {
+		return GameRulesRegistrar.moregamerules$register(name, IntRuleFactory.moregamerules$make(0, (server, rule) -> {}));
+	}
 
-  /**
-   * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _ -> new")
-  public static RuleKey<DoubleRule> makeDoubleRule(final String name, final double defaultValue, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _ -> new")
+	public static RuleKey<DoubleRule> makeDoubleRule(final String name, final double defaultValue, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<DoubleRule> makeDoubleRule(final String name, final double defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(defaultValue));
-  }
+	/**
+	 * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<DoubleRule> makeDoubleRule(final String name, final double defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(defaultValue));
+	}
 
-  /**
-   * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to a value of {@code 0.0}
-   *
-   * @param name The unique name of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<DoubleRule> makeDoubleRule(final String name, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(0.0, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to a value of {@code 0.0}
+	 *
+	 * @param name The unique name of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<DoubleRule> makeDoubleRule(final String name, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(0.0, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to a value of {@code 0.0}
-   *
-   * @param name The unique name of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_ -> new")
-  public static RuleKey<DoubleRule> makeDoubleRule(final String name) {
-    return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(0.0));
-  }
+	/**
+	 * Creates and registers a new {@link DoubleRule} by the given {@code name}, defaulting to a value of {@code 0.0}
+	 *
+	 * @param name The unique name of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_ -> new")
+	public static RuleKey<DoubleRule> makeDoubleRule(final String name) {
+		return GameRulesRegistrar.moregamerules$register(name, DoubleRule.of(0.0));
+	}
 
-  /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
-   * defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param valueType The enum's type
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _, _ -> new")
-  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+	 * defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param valueType The enum's type
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _, _ -> new")
+	public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
-   * defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param valueType The enum's type
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _ -> new")
-  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue));
-  }
+	/**
+	 * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+	 * defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param valueType The enum's type
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _ -> new")
+	public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final E defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, defaultValue));
+	}
 
-  /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
-   * defaulting to a value of {@link EnumRule#defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param valueType The enum's type
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _ -> new")
-  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType), notifier));
-  }
+	/**
+	 * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+	 * defaulting to a value of {@link EnumRule#defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param valueType The enum's type
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _ -> new")
+	public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType, final BiConsumer<MinecraftServer, EnumRule<E>> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType), notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
-   * defaulting to a value of {@link EnumRule#defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param valueType The enum's type
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType) {
-    return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType)));
-  }
+	/**
+	 * Creates and registers a new {@link EnumRule<E>} by the given {@code name}, for the given {@code valueType},
+	 * defaulting to a value of {@link EnumRule#defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param valueType The enum's type
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static <E extends Enum<E>> RuleKey<EnumRule<E>> makeEnumRule(final String name, final Class<E> valueType) {
+		return GameRulesRegistrar.moregamerules$register(name, EnumRule.of(valueType, EnumRule.defaultValue(valueType)));
+	}
 
-  /**
-   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _ -> new")
-  public static RuleKey<FloatRule> makeFloatRule(final String name, final float defaultValue, final BiConsumer<MinecraftServer, FloatRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _ -> new")
+	public static RuleKey<FloatRule> makeFloatRule(final String name, final float defaultValue, final BiConsumer<MinecraftServer, FloatRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<FloatRule> makeFloatRule(final String name, final float defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(defaultValue));
-  }
+	/**
+	 * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<FloatRule> makeFloatRule(final String name, final float defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(defaultValue));
+	}
 
-  /**
-   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
-   *
-   * @param name The unique name of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<FloatRule> makeFloatRule(final String name, final BiConsumer<MinecraftServer, FloatRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(0.0F, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
+	 *
+	 * @param name The unique name of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<FloatRule> makeFloatRule(final String name, final BiConsumer<MinecraftServer, FloatRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(0.0F, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
-   *
-   * @param name The unique name of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_ -> new")
-  public static RuleKey<FloatRule> makeFloatRule(final String name) {
-    return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(0.0F));
-  }
+	/**
+	 * Creates and registers a new {@link FloatRule} by the given {@code name}, defaulting to a value of {@code 0.0F}
+	 *
+	 * @param name The unique name of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_ -> new")
+	public static RuleKey<FloatRule> makeFloatRule(final String name) {
+		return GameRulesRegistrar.moregamerules$register(name, FloatRule.of(0.0F));
+	}
 
-  /**
-   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _, _ -> new")
-  public static RuleKey<StringRule> makeStringRule(final String name, final String defaultValue, final BiConsumer<MinecraftServer, StringRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, StringRule.of(defaultValue, notifier));
-  }
+	/**
+	 * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _, _ -> new")
+	public static RuleKey<StringRule> makeStringRule(final String name, final String defaultValue, final BiConsumer<MinecraftServer, StringRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, StringRule.of(defaultValue, notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to the given {@code defaultValue}
-   *
-   * @param name The unique name of the rule
-   * @param defaultValue The default value of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<StringRule> makeStringRule(final String name, final String defaultValue) {
-    return GameRulesRegistrar.moregamerules$register(name, StringRule.of(defaultValue));
-  }
+	/**
+	 * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to the given {@code defaultValue}
+	 *
+	 * @param name The unique name of the rule
+	 * @param defaultValue The default value of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<StringRule> makeStringRule(final String name, final String defaultValue) {
+		return GameRulesRegistrar.moregamerules$register(name, StringRule.of(defaultValue));
+	}
 
-  /**
-   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
-   *
-   * @param name The unique name of the rule
-   * @param notifier The notifier callback when the rule is updated by the server
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_, _ -> new")
-  public static RuleKey<StringRule> makeStringRule(final String name, final BiConsumer<MinecraftServer, StringRule> notifier) {
-    return GameRulesRegistrar.moregamerules$register(name, StringRule.of("", notifier));
-  }
+	/**
+	 * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
+	 *
+	 * @param name The unique name of the rule
+	 * @param notifier The notifier callback when the rule is updated by the server
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_, _ -> new")
+	public static RuleKey<StringRule> makeStringRule(final String name, final BiConsumer<MinecraftServer, StringRule> notifier) {
+		return GameRulesRegistrar.moregamerules$register(name, StringRule.of("", notifier));
+	}
 
-  /**
-   * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
-   *
-   * @param name The unique name of the rule
-   * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
-   * @throws IllegalStateException If a rule by the given {@code name} already exists
-   */
-  @Beta
-  @Contract("_ -> new")
-  public static RuleKey<StringRule> makeStringRule(final String name) {
-    return GameRulesRegistrar.moregamerules$register(name, StringRule.of(""));
-  }
+	/**
+	 * Creates and registers a new {@link StringRule} by the given {@code name}, defaulting to a value of {@code ""}
+	 *
+	 * @param name The unique name of the rule
+	 * @return A {@link RuleKey} for querying the rule from a level's {@link GameRules}
+	 * @throws IllegalStateException If a rule by the given {@code name} already exists
+	 */
+	@Beta
+	@Contract("_ -> new")
+	public static RuleKey<StringRule> makeStringRule(final String name) {
+		return GameRulesRegistrar.moregamerules$register(name, StringRule.of(""));
+	}
 }

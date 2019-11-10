@@ -29,15 +29,15 @@ import java.util.function.Supplier;
 
 // TODO: Replace with constructor invoker in Mixin 0.8
 public interface RuleTypeFactory {
-  @Contract(pure = true)
-  static RuleTypeFactory getInstance() {
-    return RuleTypeAccessors.getRuleTypeFactory();
-  }
+	@Contract(pure = true)
+	static RuleTypeFactory getInstance() {
+		return RuleTypeAccessors.getRuleTypeFactory();
+	}
 
-  @Contract(value = "_, _, _ -> new", pure = true)
-  <T extends Rule<T>> RuleType<T> make(
-    final Supplier<ArgumentType<?>> argumentType,
-    final Function<RuleType<T>, T> ruleFactory,
-    final BiConsumer<MinecraftServer, T> notifier
-  );
+	@Contract(value = "_, _, _ -> new", pure = true)
+	<T extends Rule<T>> RuleType<T> make(
+		final Supplier<ArgumentType<?>> argumentType,
+		final Function<RuleType<T>, T> ruleFactory,
+		final BiConsumer<MinecraftServer, T> notifier
+	);
 }

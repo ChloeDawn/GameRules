@@ -33,86 +33,86 @@ import java.util.function.BiConsumer;
 
 @Beta
 public final class DoubleRule extends Rule<DoubleRule> {
-  private static final Logger LOGGER = LogManager.getLogger();
+	private static final Logger LOGGER = LogManager.getLogger();
 
-  private double value;
+	private double value;
 
-  @Contract(pure = true)
-  private DoubleRule(final RuleType<DoubleRule> type, final double value) {
-    super(type);
-    this.value = value;
-  }
+	@Contract(pure = true)
+	private DoubleRule(final RuleType<DoubleRule> type, final double value) {
+		super(type);
+		this.value = value;
+	}
 
-  @Contract("_, _ -> new")
-  static RuleType<DoubleRule> of(final double value, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
-    Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number %s", value);
-    return RuleTypeFactory.getInstance().make(DoubleArgumentType::doubleArg, type -> new DoubleRule(type, value), notifier);
-  }
+	@Contract("_, _ -> new")
+	static RuleType<DoubleRule> of(final double value, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
+		Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number %s", value);
+		return RuleTypeFactory.getInstance().make(DoubleArgumentType::doubleArg, type -> new DoubleRule(type, value), notifier);
+	}
 
-  @Contract("_ -> new")
-  static RuleType<DoubleRule> of(final double value) {
-    return of(value, (server, rule) -> {});
-  }
+	@Contract("_ -> new")
+	static RuleType<DoubleRule> of(final double value) {
+		return of(value, (server, rule) -> {});
+	}
 
-  private static double parseDouble(final String string) {
-    if (!string.isEmpty()) {
-      try {
-        final double value = Double.parseDouble(string);
-        if (Double.isFinite(value)) {
-          return value;
-        }
-        LOGGER.warn("Parsed double was not a number {}", string);
-      } catch (final NumberFormatException e) {
-        LOGGER.warn("Failed to parse double {}", string);
-      }
-    }
-    return 0.0;
-  }
+	private static double parseDouble(final String string) {
+		if (!string.isEmpty()) {
+			try {
+				final double value = Double.parseDouble(string);
+				if (Double.isFinite(value)) {
+					return value;
+				}
+				LOGGER.warn("Parsed double was not a number {}", string);
+			} catch (final NumberFormatException e) {
+				LOGGER.warn("Failed to parse double {}", string);
+			}
+		}
+		return 0.0;
+	}
 
-  @Contract(pure = true)
-  public double get() {
-    return this.value;
-  }
+	@Contract(pure = true)
+	public double get() {
+		return this.value;
+	}
 
-  @Contract(mutates = "this")
-  public void set(final double value, @Nullable final MinecraftServer server) {
-    Preconditions.checkArgument(Double.isFinite(value), "Value must be a number %s", value);
-    this.value = value;
-    this.notify(server);
-  }
+	@Contract(mutates = "this")
+	public void set(final double value, @Nullable final MinecraftServer server) {
+		Preconditions.checkArgument(Double.isFinite(value), "Value must be a number %s", value);
+		this.value = value;
+		this.notify(server);
+	}
 
-  @Override
-  @Contract(mutates = "this")
-  protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
-    final double value = DoubleArgumentType.getDouble(context, name);
-    if (Double.isFinite(value)) {
-      this.value = value;
-    } else {
-      LOGGER.warn("Double argument was not a number {}", value);
-      this.value = 0.0F;
-    }
-  }
+	@Override
+	@Contract(mutates = "this")
+	protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
+		final double value = DoubleArgumentType.getDouble(context, name);
+		if (Double.isFinite(value)) {
+			this.value = value;
+		} else {
+			LOGGER.warn("Double argument was not a number {}", value);
+			this.value = 0.0F;
+		}
+	}
 
-  @Override
-  @Contract(mutates = "this")
-  protected void setFromString(final String string) {
-    this.value = parseDouble(string);
-  }
+	@Override
+	@Contract(mutates = "this")
+	protected void setFromString(final String string) {
+		this.value = parseDouble(string);
+	}
 
-  @Override
-  protected String valueToString() {
-    return Double.toString(this.value);
-  }
+	@Override
+	protected String valueToString() {
+		return Double.toString(this.value);
+	}
 
-  @Override
-  @Contract(pure = true)
-  public int toCommandResult() {
-    return Double.compare(this.value, 0.0);
-  }
+	@Override
+	@Contract(pure = true)
+	public int toCommandResult() {
+		return Double.compare(this.value, 0.0);
+	}
 
-  @Override
-  @Contract(pure = true)
-  protected DoubleRule getThis() {
-    return this;
-  }
+	@Override
+	@Contract(pure = true)
+	protected DoubleRule getThis() {
+		return this;
+	}
 }

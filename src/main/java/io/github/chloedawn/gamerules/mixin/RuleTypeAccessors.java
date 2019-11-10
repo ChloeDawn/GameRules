@@ -27,14 +27,14 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Pseudo
 @Mixin(targets = "net.minecraft.world.GameRules$RuleType")
 public interface RuleTypeAccessors<T extends Rule<T>> {
-  // TODO: Replace with constructor invoker in Mixin 0.8
-  @Contract(pure = true)
-  @Accessor(value = "RULE_TYPE_FACTORY", remap = false)
-  static RuleTypeFactory getRuleTypeFactory() {
-    throw new AssertionError();
-  }
+	// TODO: Replace with constructor invoker in Mixin 0.8
+	@Contract(pure = true)
+	@Accessor(value = "RULE_TYPE_FACTORY", remap = false)
+	static RuleTypeFactory getRuleTypeFactory() {
+		throw new AssertionError();
+	}
 
-  @Contract(pure = true)
-  @Accessor(remap = false)
-  Notifiers<T> getAdditionalNotifiers();
+	@Contract(pure = true)
+	@Accessor(remap = false)
+	Notifiers<T> getAdditionalNotifiers();
 }

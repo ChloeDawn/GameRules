@@ -23,13 +23,17 @@ import net.minecraft.world.GameRules.RuleType;
 import org.jetbrains.annotations.Contract;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.throwables.MixinException;
 
 @Mixin(GameRules.class)
 @SuppressWarnings("Contract") // Contract is not violated at runtime
 public interface GameRulesRegistrar {
-  @Invoker("register")
-  @Contract("_, _ -> new")
-  static <T extends Rule<T>> RuleKey<T> moregamerules$register(final String name, final RuleType<T> type) {
-    throw new AssertionError();
-  }
+	@Invoker("register")
+	@Contract("_, _ -> new")
+	static <T extends Rule<T>> RuleKey<T> moregamerules$register(
+		@SuppressWarnings("unused") final String name,
+		@SuppressWarnings("unused") final RuleType<T> type
+	) {
+		throw new MixinException("Missing invoker implementation");
+	}
 }
