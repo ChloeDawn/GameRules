@@ -13,14 +13,20 @@ buildscript {
 			name = 'jitpack.io'
 			url = 'https://jitpack.io'
 		}
+		maven {
+			name = 'kotlin-eap'
+			url = 'https://dl.bintray.com/kotlin/kotlin-eap'
+		}
 	}
 	dependencies {
 		classpath "io.github.Chocohead:fabric-loom:$loom"
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
 	}
 }
 
 apply plugin: 'java'
 apply plugin: 'fabric-loom'
+apply plugin: 'kotlin'
 
 archivesBaseName = rootProject.name
 group = domain
@@ -33,12 +39,21 @@ minecraft {
 	runDir = 'run'
 }
 
+repositories {
+	mavenCentral()
+	maven {
+		name = 'kotlin-eap'
+		url = 'https://dl.bintray.com/kotlin/kotlin-eap'
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:$game"
 	mappings "net.fabricmc:yarn:$game+$mappings"
 	modCompile "net.fabricmc:fabric-loader:$loader"
 	implementation "com.google.code.findbugs:jsr305:$findbugs"
 	implementation "org.jetbrains:annotations:$annotations"
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
 }
 
 processResources {
@@ -56,4 +71,12 @@ tasks.withType(JavaCompile) {
 		'-Xmaxerrs', Integer.MAX_VALUE,
 		'-Xmaxwarns', Integer.MAX_VALUE
 	]
+}
+
+compileKotlin {
+	kotlinOptions {
+		verbose = true
+		jvmTarget = '1.8'
+		javaParameters = true
+	}
 }
