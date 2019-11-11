@@ -32,9 +32,9 @@ public interface IntRuleSetter {
 	 */
 	@Contract(mutates = "param1")
 	static void set(final IntRule rule, final int value, @Nullable final MinecraftServer server) {
-		((IntRuleSetter) rule).set((IntRuleSetter) rule, value, server);
+		((IntRuleSetter) rule).moregamerules$set(value, server);
 	}
 
 	@Contract(mutates = "this")
-	void set(final IntRuleSetter thiz, final int value, @Nullable final MinecraftServer server);
+	void moregamerules$set(final int value, @Nullable final MinecraftServer server);
 }

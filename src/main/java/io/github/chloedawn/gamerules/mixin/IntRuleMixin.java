@@ -35,8 +35,7 @@ abstract class IntRuleMixin extends Rule<IntRule> implements IntRuleSetter {
 	}
 
 	@Override
-	public final void set(final IntRuleSetter thiz, final int value, @Nullable final MinecraftServer server) {
-		assert this == thiz : String.valueOf(thiz);
+	public final void moregamerules$set(final int value, @Nullable final MinecraftServer server) {
 		this.value = value;
 		this.notify(server);
 	}
