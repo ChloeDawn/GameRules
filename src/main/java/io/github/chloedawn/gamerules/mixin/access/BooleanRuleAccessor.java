@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.chloedawn.gamerules.mixin;
+package io.github.chloedawn.gamerules.mixin.access;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules.BooleanRule;
@@ -25,12 +25,24 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.function.BiConsumer;
 
+/**
+ * Accessor interface for {@link BooleanRule}
+ *
+ * @author Chloe Dawn
+ */
 @Mixin(BooleanRule.class)
-@SuppressWarnings("Contract") // Contract is not violated at runtime
-public interface BooleanRuleFactory {
-	@Invoker("of")
-	@Contract(value = "_, _ -> new", pure = true)
-	static RuleType<BooleanRule> moregamerules$make(final boolean defaultValue, final BiConsumer<MinecraftServer, BooleanRule> notifier) {
-		throw new AssertionError();
-	}
+public interface BooleanRuleAccessor {
+  /**
+   * Calls the primary {@link RuleType<BooleanRule>} factory method
+   *
+   * @param initialValue The initial boolean value of rule instances
+   * @param changeCallback The change callback for rule instances
+   * @return A new boolean rule type
+   */
+  @Invoker
+  @Contract(value = "_, _ -> new", pure = true)
+  static RuleType<BooleanRule> callCreate(final boolean initialValue, final BiConsumer<MinecraftServer, BooleanRule> changeCallback) {
+    //noinspection Contract
+    throw new AssertionError();
+  }
 }

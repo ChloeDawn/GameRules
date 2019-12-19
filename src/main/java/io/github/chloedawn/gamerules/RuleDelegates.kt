@@ -1,135 +1,377 @@
-/*
- * Copyright (C) 2019 Chloe Dawn
+/**
+ * Rule delegates API for Kotlin library users, to allow for simplified
+ * access to game rule values. Example usage:
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * ```
+ * import io.github.chloedawn.gamerules.getValue
+ * import io.github.chloedawn.gamerules.setValue
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * var GameRules.isFooBar by IS_FOO_BAR
+ * var MinecraftServer.isFooBar by IS_FOO_BAR
+ * var World.isFooBar by IS_FOO_BAR
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * fun foobar(server: MinecraftServer) {
+ *  var isFooBar by server.gameRules[IS_FOO_BAR]
+ * }
+ * ```
+ *
+ * @author Chloe Dawn
+ * @since 0.1.0
  */
+
+@file:JvmName("RuleDelegates")
 
 package io.github.chloedawn.gamerules
 
 import com.google.common.annotations.Beta
 import net.minecraft.server.MinecraftServer
+import net.minecraft.world.GameRules
 import net.minecraft.world.GameRules.BooleanRule
 import net.minecraft.world.GameRules.IntRule
 import net.minecraft.world.GameRules.RuleKey
+import net.minecraft.world.World
 import kotlin.reflect.KProperty
 
-@JvmName("getBoolean")
-operator fun MinecraftServer.get(key: RuleKey<BooleanRule>): Boolean =
-	RuleDelegates.getBoolean(this, key)
+/**
+ * Gets the value of the delegate [BooleanRule]
+ *
+ * @since 0.1.0
+ * @see BooleanRule.get
+ */
+@JvmSynthetic
+operator fun BooleanRule.getValue(any: Any?, property: KProperty<*>): Boolean {
+  return get()
+}
 
-@JvmName("setBoolean")
-operator fun MinecraftServer.set(key: RuleKey<BooleanRule>, value: Boolean) =
-	RuleDelegates.setBoolean(this, key, value)
+/**
+ * Sets the value of the delegate [BooleanRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see BooleanRule.set
+ */
+@JvmSynthetic
+operator fun BooleanRule.setValue(any: Any?, property: KProperty<*>, value: Boolean) {
+  set(value, null)
+}
 
-@JvmName("getBoolean")
-operator fun RuleKey<BooleanRule>.getValue(server: MinecraftServer, property: KProperty<*>): Boolean =
-	RuleDelegates.getBoolean(server, this)
+/**
+ * Gets the value of the delegate [IntRule]
+ *
+ * @since 0.1.0
+ * @see IntRule.get
+ */
+@JvmSynthetic
+operator fun IntRule.getValue(any: Any?, property: KProperty<*>): Int {
+  return get()
+}
 
-@JvmName("setBoolean")
-operator fun RuleKey<BooleanRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Boolean) =
-	RuleDelegates.setBoolean(server, this, value)
+/**
+ * Sets the value of the delegate [IntRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see IntRule.set
+ */
+@JvmSynthetic
+operator fun IntRule.setValue(any: Any?, property: KProperty<*>, value: Int) {
+  Rules.set(this, value, null)
+}
 
-@JvmName("getInt")
-operator fun MinecraftServer.get(key: RuleKey<IntRule>): Int =
-	RuleDelegates.getInt(this, key)
+/**
+ * Gets the value of the delegate [DoubleRule]
+ *
+ * @since 0.1.0
+ * @see DoubleRule.get
+ */
+@Beta
+@JvmSynthetic
+operator fun DoubleRule.getValue(any: Any?, property: KProperty<*>): Double {
+  return get()
+}
 
-@JvmName("setInt")
-operator fun MinecraftServer.set(key: RuleKey<IntRule>, value: Int) =
-	RuleDelegates.setInt(this, key, value)
+/**
+ * Sets the value of the delegate [DoubleRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see DoubleRule.set
+ */
+@Beta
+@JvmSynthetic
+operator fun DoubleRule.setValue(any: Any?, property: KProperty<*>, value: Double) {
+  set(value, null)
+}
 
-@JvmName("getInt")
-operator fun RuleKey<IntRule>.getValue(server: MinecraftServer, property: KProperty<*>): Int =
-	RuleDelegates.getInt(server, this)
+/**
+ * Gets the value of the delegate [EnumRule]
+ *
+ * @since 0.1.0
+ * @see EnumRule.get
+ */
+@Beta
+@JvmSynthetic
+operator fun <E : Enum<E>> EnumRule<E>.getValue(any: Any?, property: KProperty<*>): E {
+  return get()
+}
 
-@JvmName("setInt")
-operator fun RuleKey<IntRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Int) =
-	RuleDelegates.setInt(server, this, value)
+/**
+ * Sets the value of the delegate [EnumRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see DoubleRule.set
+ */
+@Beta
+@JvmSynthetic
+operator fun <E : Enum<E>> EnumRule<E>.setValue(any: Any?, property: KProperty<*>, value: E) {
+  set(value, null)
+}
+
+/**
+ * Gets the value of the delegate [FloatRule]
+ *
+ * @since 0.1.0
+ * @see FloatRule.get
+ */
+@Beta
+@JvmSynthetic
+operator fun FloatRule.getValue(any: Any?, property: KProperty<*>): Float {
+  return get()
+}
+
+/**
+ * Sets the value of the delegate [FloatRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see FloatRule.set
+ */
+@Beta
+@JvmSynthetic
+operator fun FloatRule.setValue(any: Any?, property: KProperty<*>, value: Float) {
+  set(value, null)
+}
+
+/**
+ * Gets the value of the delegate [StringRule]
+ *
+ * @since 0.1.0
+ * @see StringRule.get
+ */
+@Beta
+@JvmSynthetic
+operator fun StringRule.getValue(any: Any?, property: KProperty<*>): String {
+  return get()
+}
+
+/**
+ * Sets the value of the delegate [StringRule] to the given [value]
+ *
+ * @since 0.1.0
+ * @see StringRule.set
+ */
+@Beta
+@JvmSynthetic
+operator fun StringRule.setValue(any: Any?, property: KProperty<*>, value: String) {
+  set(value, null)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.getValue(rules: GameRules, property: KProperty<*>): Boolean {
+  return rules.getBoolean(this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.getValue(server: MinecraftServer, property: KProperty<*>): Boolean {
+  return Rules.getBoolean(server, this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.getValue(world: World, property: KProperty<*>): Boolean {
+  return Rules.getBoolean(world, this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.setValue(rules: GameRules, property: KProperty<*>, value: Boolean) {
+  Rules.setBoolean(rules, this, value)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Boolean) {
+  Rules.setBoolean(server, this, value)
+}
+
+@JvmSynthetic
+operator fun RuleKey<BooleanRule>.setValue(world: World, property: KProperty<*>, value: Boolean) {
+  Rules.setBoolean(world, this, value)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.getValue(rules: GameRules, property: KProperty<*>): Int {
+  return rules.getInt(this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.getValue(server: MinecraftServer, property: KProperty<*>): Int {
+  return Rules.getInt(server, this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.getValue(world: World, property: KProperty<*>): Int {
+  return Rules.getInt(world, this)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.setValue(rules: GameRules, property: KProperty<*>, value: Int) {
+  Rules.setInt(rules, this, value)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Int) {
+  Rules.setInt(server, this, value)
+}
+
+@JvmSynthetic
+operator fun RuleKey<IntRule>.setValue(world: World, property: KProperty<*>, value: Int) {
+  Rules.setInt(world, this, value)
+}
 
 @Beta
-@JvmName("getDouble")
-operator fun MinecraftServer.get(key: RuleKey<DoubleRule>): Double =
-	RuleDelegates.getDouble(this, key)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.getValue(rules: GameRules, property: KProperty<*>): Double {
+  return Rules.getDouble(rules, this)
+}
 
 @Beta
-@JvmName("setDouble")
-operator fun MinecraftServer.set(key: RuleKey<DoubleRule>, value: Double) =
-	RuleDelegates.setDouble(this, key, value)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.getValue(server: MinecraftServer, property: KProperty<*>): Double {
+  return Rules.getDouble(server, this)
+}
 
 @Beta
-@JvmName("getDouble")
-operator fun RuleKey<DoubleRule>.getValue(server: MinecraftServer, property: KProperty<*>): Double =
-	RuleDelegates.getDouble(server, this)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.getValue(world: World, property: KProperty<*>): Double {
+  return Rules.getDouble(world, this)
+}
 
 @Beta
-@JvmName("setDouble")
-operator fun RuleKey<DoubleRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Double) =
-	RuleDelegates.setDouble(server, this, value)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.setValue(rules: GameRules, property: KProperty<*>, value: Double) {
+  Rules.setDouble(rules, this, value)
+}
 
 @Beta
-@JvmName("getEnum")
-operator fun <E : Enum<E>> MinecraftServer.get(key: RuleKey<EnumRule<E>>): E =
-	RuleDelegates.getEnum(this, key)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Double) {
+  Rules.setDouble(server, this, value)
+}
 
 @Beta
-@JvmName("setEnum")
-operator fun <E : Enum<E>> MinecraftServer.set(key: RuleKey<EnumRule<E>>, value: E) =
-	RuleDelegates.setEnum(this, key, value)
+@JvmSynthetic
+operator fun RuleKey<DoubleRule>.setValue(world: World, property: KProperty<*>, value: Double) {
+  Rules.setDouble(world, this, value)
+}
 
 @Beta
-@JvmName("getEnum")
-operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.getValue(server: MinecraftServer, property: KProperty<*>): E =
-	RuleDelegates.getEnum(server, this)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.getValue(rules: GameRules, property: KProperty<*>): E {
+  return Rules.getEnum(rules, this)
+}
 
 @Beta
-@JvmName("setEnum")
-operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.setValue(server: MinecraftServer, property: KProperty<*>, value: E) =
-	RuleDelegates.setEnum(server, this, value)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.getValue(server: MinecraftServer, property: KProperty<*>): E {
+  return Rules.getEnum(server, this)
+}
 
 @Beta
-@JvmName("getFloat")
-operator fun MinecraftServer.get(key: RuleKey<FloatRule>): Float =
-	RuleDelegates.getFloat(this, key)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.getValue(world: World, property: KProperty<*>): E {
+  return Rules.getEnum(world, this)
+}
 
 @Beta
-@JvmName("setFloat")
-operator fun MinecraftServer.set(key: RuleKey<FloatRule>, value: Float) =
-	RuleDelegates.setFloat(this, key, value)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.setValue(rules: GameRules, property: KProperty<*>, value: E) {
+  Rules.setEnum(rules, this, value)
+}
 
 @Beta
-@JvmName("getFloat")
-operator fun RuleKey<FloatRule>.getValue(server: MinecraftServer, property: KProperty<*>): Float =
-	RuleDelegates.getFloat(server, this)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.setValue(server: MinecraftServer, property: KProperty<*>, value: E) {
+  Rules.setEnum(server, this, value)
+}
 
 @Beta
-@JvmName("setFloat")
-operator fun RuleKey<FloatRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Float) =
-	RuleDelegates.setFloat(server, this, value)
-
-@JvmName("getString")
-operator fun MinecraftServer.get(key: RuleKey<StringRule>): String =
-	RuleDelegates.getString(this, key)
+@JvmSynthetic
+operator fun <E : Enum<E>> RuleKey<EnumRule<E>>.setValue(world: World, property: KProperty<*>, value: E) {
+  Rules.setEnum(world, this, value)
+}
 
 @Beta
-@JvmName("setString")
-operator fun MinecraftServer.set(key: RuleKey<StringRule>, value: String) =
-	RuleDelegates.setString(this, key, value)
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.getValue(rules: GameRules, property: KProperty<*>): Float {
+  return Rules.getFloat(rules, this)
+}
 
 @Beta
-@JvmName("getString")
-operator fun RuleKey<StringRule>.getValue(server: MinecraftServer, property: KProperty<*>): String =
-	RuleDelegates.getString(server, this)
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.getValue(server: MinecraftServer, property: KProperty<*>): Float {
+  return Rules.getFloat(server, this)
+}
 
 @Beta
-@JvmName("setString")
-operator fun RuleKey<StringRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: String) =
-	RuleDelegates.setString(server, this, value)
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.getValue(world: World, property: KProperty<*>): Float {
+  return Rules.getFloat(world, this)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.setValue(rules: GameRules, property: KProperty<*>, value: Float) {
+  Rules.setFloat(rules, this, value)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: Float) {
+  Rules.setFloat(server, this, value)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<FloatRule>.setValue(world: World, property: KProperty<*>, value: Float) {
+  Rules.setFloat(world, this, value)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.getValue(rules: GameRules, property: KProperty<*>): String {
+  return Rules.getString(rules, this)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.getValue(server: MinecraftServer, property: KProperty<*>): String {
+  return Rules.getString(server, this)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.getValue(world: World, property: KProperty<*>): String {
+  return Rules.getString(world, this)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.setValue(rules: GameRules, property: KProperty<*>, value: String) {
+  Rules.setString(rules, this, value)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.setValue(server: MinecraftServer, property: KProperty<*>, value: String) {
+  Rules.setString(server, this, value)
+}
+
+@Beta
+@JvmSynthetic
+operator fun RuleKey<StringRule>.setValue(world: World, property: KProperty<*>, value: String) {
+  Rules.setString(world, this, value)
+}

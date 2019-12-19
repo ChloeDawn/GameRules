@@ -16,15 +16,24 @@
 
 package io.github.chloedawn.gamerules.mixin;
 
-import io.github.chloedawn.gamerules.Notifiers;
-import io.github.chloedawn.gamerules.RuleTypeFactory;
+import io.github.chloedawn.gamerules.RuleChangeCallbacks;
+import io.github.chloedawn.gamerules.mixin.access.RuleTypeAccessor;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
+/**
+ * Mixin class for {@link RuleType}
+ *
+ * @param <T> The rule type
+ */
 @Mixin(RuleType.class)
 abstract class RuleTypeMixin<T extends Rule<T>> {
-	private static final RuleTypeFactory RULE_TYPE_FACTORY = RuleType::new;
-
-	private final Notifiers<T> additionalNotifiers = Notifiers.create();
+  /**
+   * Storage for additional change callbacks exposed through an accessor mixin
+   *
+   * @see RuleTypeAccessor#getChangeCallbacks()
+   */
+  @Unique private final RuleChangeCallbacks<T> changeCallbacks = new RuleChangeCallbacks<>();
 }

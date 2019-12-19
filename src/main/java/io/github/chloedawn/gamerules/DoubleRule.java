@@ -16,7 +16,6 @@
 
 package io.github.chloedawn.gamerules;
 
-import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -26,93 +25,94 @@ import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
-@Beta
+/**
+ * A {@link Rule} implementation for finite {@code double} values
+ *
+ * @author Chloe Dawn
+ * @see Rules#createDoubleRule
+ * @since 0.1.0
+ */
 public final class DoubleRule extends Rule<DoubleRule> {
-	private static final Logger LOGGER = LogManager.getLogger();
+  private static final Logger LOGGER = LogManager.getLogger();
 
-	private double value;
+  private double value;
 
-	@Contract(pure = true)
-	private DoubleRule(final RuleType<DoubleRule> type, final double value) {
-		super(type);
-		this.value = value;
-	}
+  @Contract(pure = true)
+  private DoubleRule(final RuleType<DoubleRule> type, final double initialValue) {
+    super(type);
+    this.value = initialValue;
+  }
 
-	@Contract("_, _ -> new")
-	static RuleType<DoubleRule> of(final double value, final BiConsumer<MinecraftServer, DoubleRule> notifier) {
-		Preconditions.checkArgument(Double.isFinite(value), "Default value must be a number %s", value);
-		return RuleTypeFactory.getInstance().make(DoubleArgumentType::doubleArg, type -> new DoubleRule(type, value), notifier);
-	}
+  @Contract("_, _ -> new")
+  static RuleType<DoubleRule> create(final double initialValue, final BiConsumer<MinecraftServer, DoubleRule> changeCallback) {
+    Preconditions.checkArgument(Double.isFinite(initialValue), "Initial value must be a number %s", initialValue);
+    return Rules.type("double", DoubleArgumentType::doubleArg, type -> new DoubleRule(type, initialValue), changeCallback);
+  }
 
-	@Contract("_ -> new")
-	static RuleType<DoubleRule> of(final double value) {
-		return of(value, (server, rule) -> {});
-	}
+  private static double parseDouble(final String string) {
+    if (!string.isEmpty()) {
+      try {
+        final double value = Double.parseDouble(string);
+        if (Double.isFinite(value)) {
+          return value;
+        }
+        LOGGER.warn("Parsed double was not a number {}", string);
+      } catch (final NumberFormatException e) {
+        LOGGER.warn("Failed to parse double {}", string);
+      }
+    }
+    return 0.0;
+  }
 
-	private static double parseDouble(final String string) {
-		if (!string.isEmpty()) {
-			try {
-				final double value = Double.parseDouble(string);
-				if (Double.isFinite(value)) {
-					return value;
-				}
-				LOGGER.warn("Parsed double was not a number {}", string);
-			} catch (final NumberFormatException e) {
-				LOGGER.warn("Failed to parse double {}", string);
-			}
-		}
-		return 0.0;
-	}
+  @Contract(pure = true)
+  public double get() {
+    return this.value;
+  }
 
-	@Contract(pure = true)
-	public double get() {
-		return this.value;
-	}
+  @Contract(mutates = "this")
+  public void set(final double value, final @Nullable MinecraftServer server) {
+    Preconditions.checkArgument(Double.isFinite(value), "Value must be a number %s", value);
+    this.value = value;
+    this.changed(server);
+  }
 
-	@Contract(mutates = "this")
-	public void set(final double value, @Nullable final MinecraftServer server) {
-		Preconditions.checkArgument(Double.isFinite(value), "Value must be a number %s", value);
-		this.value = value;
-		this.notify(server);
-	}
+  @Override
+  @Contract(mutates = "this")
+  protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
+    final double value = DoubleArgumentType.getDouble(context, name);
+    if (Double.isFinite(value)) {
+      this.value = value;
+    } else {
+      LOGGER.warn("Double argument was not a number {}", value);
+      this.value = 0.0;
+    }
+  }
 
-	@Override
-	@Contract(mutates = "this")
-	protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
-		final double value = DoubleArgumentType.getDouble(context, name);
-		if (Double.isFinite(value)) {
-			this.value = value;
-		} else {
-			LOGGER.warn("Double argument was not a number {}", value);
-			this.value = 0.0F;
-		}
-	}
+  @Override
+  @Contract(mutates = "this")
+  protected void deserialize(final String string) {
+    this.value = parseDouble(string);
+  }
 
-	@Override
-	@Contract(mutates = "this")
-	protected void setFromString(final String string) {
-		this.value = parseDouble(string);
-	}
+  @Override
+  protected String serialize() {
+    return Double.toString(this.value);
+  }
 
-	@Override
-	protected String valueToString() {
-		return Double.toString(this.value);
-	}
+  @Override
+  @Contract(pure = true)
+  public int getCommandResult() {
+    return Double.compare(this.value, 0.0);
+  }
 
-	@Override
-	@Contract(pure = true)
-	public int toCommandResult() {
-		return Double.compare(this.value, 0.0);
-	}
-
-	@Override
-	@Contract(pure = true)
-	protected DoubleRule getThis() {
-		return this;
-	}
+  @Override
+  @Contract(pure = true)
+  protected DoubleRule getThis() {
+    return this;
+  }
 }

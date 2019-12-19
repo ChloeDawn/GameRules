@@ -16,6 +16,7 @@
 
 package io.github.chloedawn.gamerules.mixin;
 
+import io.github.chloedawn.gamerules.RuleChangeCallbacks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
@@ -27,16 +28,28 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * Mixin class for {@link Rule}
+ *
+ * @author Chloe Dawn
+ */
 @Mixin(Rule.class)
 abstract class RuleMixin<T extends Rule<T>> {
-	@Shadow @Final private RuleType<T> type;
+  @Shadow @Final private RuleType<T> type;
 
-	@Shadow
-	protected abstract T getThis();
+  @Shadow
+  protected abstract T getThis();
 
-	@SuppressWarnings("unchecked")
-	@Inject(method = "notify", at = @At(value = "INVOKE", target = "Ljava/util/function/BiConsumer;accept(Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER))
-	private void moregamerules$onEachNotifier(final MinecraftServer server, final CallbackInfo ci) {
-		((RuleTypeAccessors<T>) this.type).getAdditionalNotifiers().onEach(server, this.getThis());
-	}
+  /**
+   * Injects into {@link Rule#changed(MinecraftServer)} after the server has been checked
+   * non-null and the primary callback has been called, and calls additional callbacks
+   *
+   * @param server The server that this rule is bound to
+   * @param ci The callback information
+   * @see RuleChangeCallbacks#call(MinecraftServer, Rule)
+   */
+  @Inject(method = "changed", at = @At(value = "INVOKE", target = "Ljava/util/function/BiConsumer;accept(Ljava/lang/Object;Ljava/lang/Object;)V", shift = Shift.AFTER))
+  private void callAdditionalCallbacks(final MinecraftServer server, final CallbackInfo ci) {
+    RuleChangeCallbacks.<T>of(this.type).call(server, this.getThis());
+  }
 }

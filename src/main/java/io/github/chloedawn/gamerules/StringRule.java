@@ -16,76 +16,77 @@
 
 package io.github.chloedawn.gamerules;
 
-import com.google.common.annotations.Beta;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.GameRules.Rule;
 import net.minecraft.world.GameRules.RuleType;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
-@Beta
+/**
+ * A {@link Rule} implementation for {@code String} values
+ *
+ * @author Chloe Dawn
+ * @see Rules#createStringRule
+ * @since 0.1.0
+ */
 public final class StringRule extends Rule<StringRule> {
-	private String value;
+  private String value;
 
-	@Contract(pure = true)
-	private StringRule(final RuleType<StringRule> type, final String value) {
-		super(type);
-		this.value = value;
-	}
+  @Contract(pure = true)
+  private StringRule(final RuleType<StringRule> type, final String initialValue) {
+    super(type);
+    this.value = initialValue;
+  }
 
-	@Contract("_, _ -> new")
-	static RuleType<StringRule> of(final String value, final BiConsumer<MinecraftServer, StringRule> notifier) {
-		return RuleTypeFactory.getInstance().make(StringArgumentType::string, type -> new StringRule(type, value), notifier);
-	}
+  @Contract("_, _ -> new")
+  static RuleType<StringRule> create(final String initialValue, final BiConsumer<MinecraftServer, StringRule> callback) {
+    return Rules.type("string", StringArgumentType::string, type -> new StringRule(type, initialValue), callback);
+  }
 
-	@Contract("_ -> new")
-	static RuleType<StringRule> of(final String value) {
-		return of(value, (server, rule) -> {});
-	}
+  @Contract(pure = true)
+  public String get() {
+    return this.value;
+  }
 
-	@Contract(pure = true)
-	public String get() {
-		return this.value;
-	}
+  @Contract(mutates = "this")
+  public void set(final String value, final @Nullable MinecraftServer server) {
+    this.value = Objects.requireNonNull(value);
+    this.changed(server);
+  }
 
-	@Contract(mutates = "this")
-	public void set(final String value, @Nullable final MinecraftServer server) {
-		this.value = value;
-		this.notify(server);
-	}
+  @Override
+  @Contract(mutates = "this")
+  protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
+    this.value = StringArgumentType.getString(context, name);
+  }
 
-	@Override
-	@Contract(mutates = "this")
-	protected void setFromArgument(final CommandContext<ServerCommandSource> context, final String name) {
-		this.value = StringArgumentType.getString(context, name);
-	}
+  @Override
+  @Contract(mutates = "this")
+  protected void deserialize(final String string) {
+    this.value = string;
+  }
 
-	@Override
-	@Contract(mutates = "this")
-	protected void setFromString(final String string) {
-		this.value = string;
-	}
+  @Override
+  @Contract(pure = true)
+  protected String serialize() {
+    return this.value;
+  }
 
-	@Override
-	@Contract(pure = true)
-	protected String valueToString() {
-		return this.value;
-	}
+  @Override
+  @Contract(pure = true)
+  public int getCommandResult() {
+    return this.value.hashCode();
+  }
 
-	@Override
-	@Contract(pure = true)
-	public int toCommandResult() {
-		return this.value.hashCode();
-	}
-
-	@Override
-	@Contract(pure = true)
-	protected StringRule getThis() {
-		return this;
-	}
+  @Override
+  @Contract(pure = true)
+  protected StringRule getThis() {
+    return this;
+  }
 }

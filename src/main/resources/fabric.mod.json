@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "id": "moregamerules",
-  "name": "More Game Rules",
+  "id": "gamerules",
+  "name": "Game Rules",
   "version": "$version",
-  "description": "A library for adding more game rules to levels",
+  "description": "A library for registering and observing game rules",
   "license": "Apache-2.0",
   "depends": {
-    "fabricloader": ">=0.6.3"
+    "fabricloader": ">=0.7.2"
   },
   "mixins": [
-    "mixins/moregamerules/mixins.json"
+    "mixins/gamerules/mixins.json"
   ],
   "authors": [
     {
@@ -20,8 +20,8 @@
     }
   ],
   "contact": {
-    "homepage": "https://git.io/JeBwt",
-    "sources": "https://git.io/JeBwt",
-    "issues": "https://git.io/JeBwq"
+    "homepage": "https://git.io/Jeir1",
+    "sources": "https://git.io/Jeir1",
+    "issues": "https://git.io/JeirM"
   }
 }

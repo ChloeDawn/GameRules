@@ -14,23 +14,46 @@
  * limitations under the License.
  */
 
-package io.github.chloedawn.gamerules.mixin;
+package io.github.chloedawn.gamerules.mixin.access;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules.IntRule;
 import net.minecraft.world.GameRules.RuleType;
 import org.jetbrains.annotations.Contract;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.function.BiConsumer;
 
+/**
+ * Accessor interface for {@link IntRule}
+ *
+ * @author Chloe Dawn
+ */
 @Mixin(IntRule.class)
-@SuppressWarnings("Contract") // Contract is not violated at runtime
-public interface IntRuleFactory {
-	@Invoker("of")
-	@Contract(value = "_, _ -> new", pure = true)
-	static RuleType<IntRule> moregamerules$make(final int defaultValue, final BiConsumer<MinecraftServer, IntRule> notifier) {
-		throw new AssertionError();
-	}
+public interface IntRuleAccessor {
+  /**
+   * Calls the primary {@link RuleType<IntRule>} factory method
+   *
+   * @param initialValue The initial int value of rule instances
+   * @param changeCallback The change callback for rule instances
+   * @return A new int rule type
+   */
+  @Invoker
+  @Contract(value = "_, _ -> new", pure = true)
+  static RuleType<IntRule> callCreate(final int initialValue, final BiConsumer<MinecraftServer, IntRule> changeCallback) {
+    //noinspection Contract
+    throw new AssertionError();
+  }
+
+  /**
+   * Sets the value of {@code this} {@link IntRule} to the given value
+   *
+   * @param value The new value
+   * @see IntRule#value
+   */
+  @Accessor
+  @Contract(mutates = "this")
+  void setValue(final int value);
 }

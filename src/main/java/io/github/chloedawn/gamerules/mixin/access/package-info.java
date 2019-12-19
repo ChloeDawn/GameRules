@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package io.github.chloedawn.gamerules.mixin;
+/**
+ * All classes declared in this package are internal interfaces used for
+ * accessing, invoking and mutating members of explicitly defined targets
+ * 
+ * @author Chloe Dawn
+ */
+@ApiStatus.Internal
+@DefaultQualifier(NonNull.class)
+package io.github.chloedawn.gamerules.mixin.access;
 
-import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.RuleKey;
-import net.minecraft.world.GameRules.RuleType;
-import org.jetbrains.annotations.Contract;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
-
-import java.util.Map;
-
-@Mixin(GameRules.class)
-public interface GameRulesAccessor {
-	@Accessor("RULES")
-	@Contract(pure = true)
-	static Map<RuleKey<?>, RuleType<?>> moregamerules$getRules() {
-		throw new AssertionError();
-	}
-}
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.framework.qual.DefaultQualifier;
+import org.jetbrains.annotations.ApiStatus;

@@ -1,0 +1,20 @@
+{
+  "target": "@environment(DEFAULT)",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_8",
+  "required": true,
+  "package": "io.github.chloedawn.gamerules.mixin",
+  "mixins": [
+    "access.BooleanRuleAccessor",
+    "access.GameRulesAccessor",
+    "access.IntRuleAccessor",
+    "access.RuleAccessor",
+    "access.RuleTypeAccessor",
+    "RuleMixin",
+    "RuleTypeMixin"
+  ],
+  "refmap": "mixins/gamerules/refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,82 +1,54 @@
 buildscript {
-	repositories {
-		mavenCentral()
-		maven {
-			name = 'fabricmc.net'
-			url = 'https://maven.fabricmc.net'
-		}
-		maven {
-			name = 'files.minecraftforge.net'
-			url = 'https://files.minecraftforge.net/maven'
-		}
-		maven {
-			name = 'jitpack.io'
-			url = 'https://jitpack.io'
-		}
-		maven {
-			name = 'kotlin-eap'
-			url = 'https://dl.bintray.com/kotlin/kotlin-eap'
-		}
-	}
-	dependencies {
-		classpath "io.github.Chocohead:fabric-loom:$loom"
-		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
-	}
+  repositories {
+    mavenCentral()
+    maven { url 'https://maven.fabricmc.net' }
+  }
+  dependencies {
+    classpath "net.fabricmc:fabric-loom:$loom"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin"
+  }
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
 apply plugin: 'fabric-loom'
 apply plugin: 'kotlin'
 
 archivesBaseName = rootProject.name
-group = domain
+group = 'io.github.chloedawn'
 version = revision
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = 1.8
 
 minecraft {
-	AT = 'compile_at.txt'
-	refmapName = "mixins/$namespace/refmap.json"
-	runDir = 'run'
-}
-
-repositories {
-	mavenCentral()
-	maven {
-		name = 'kotlin-eap'
-		url = 'https://dl.bintray.com/kotlin/kotlin-eap'
-	}
+  refmapName = 'mixins/gamerules/refmap.json'
+  runDir = 'run'
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:$game"
-	mappings "net.fabricmc:yarn:$game+$mappings"
-	modCompile "net.fabricmc:fabric-loader:$loader"
-	implementation "com.google.code.findbugs:jsr305:$findbugs"
-	implementation "org.jetbrains:annotations:$annotations"
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
+  minecraft "com.mojang:minecraft:$game"
+  mappings "net.fabricmc:yarn:$game+$mappings"
+  modImplementation "net.fabricmc:fabric-loader:$loader"
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
+  implementation "org.jetbrains:annotations:$annotations"
+  implementation "org.checkerframework:checker-qual:$checker"
 }
 
 processResources {
-	from(sourceSets.main.resources.srcDirs) {
-		expand version: version, refmap: minecraft.refmapName
-	}
+  from(sourceSets.main.resources.srcDirs) {
+    expand version: version, refmap: minecraft.refmapName
+  }
 }
 
-tasks.withType(JavaCompile) {
-	options.compilerArgs += [
-		'-Xlint:all',
-		'-XprintRounds',
-		'-XprintProcessorInfo',
-		'-encoding', 'UTF-8',
-		'-Xmaxerrs', Integer.MAX_VALUE,
-		'-Xmaxwarns', Integer.MAX_VALUE
-	]
+compileJava.options.with {
+  it.compilerArgs << ['-Xlint:all', '-XprintRounds', '-XprintProcessorInfo']
+  it.encoding = 'UTF-8'
+  it.fork = true
 }
 
 compileKotlin {
-	kotlinOptions {
-		verbose = true
-		jvmTarget = '1.8'
-		javaParameters = true
-	}
+  kotlinOptions {
+    verbose = true
+    jvmTarget = '1.8'
+    javaParameters = true
+  }
 }
