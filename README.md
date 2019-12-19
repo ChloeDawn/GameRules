@@ -1,4 +1,4 @@
-# MoreGameRules
+# Game Rules
 
 A library written for Fabric that allows for registration and observation of game rules.
 Also includes rule implementations for doubles, enums, floats, and strings. The library
