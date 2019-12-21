@@ -40,7 +40,7 @@ processResources {
 }
 
 compileJava.options.with {
-  it.compilerArgs << ['-Xlint:all', '-XprintRounds', '-XprintProcessorInfo']
+  it.compilerArgs << '-Xlint:all'
   it.encoding = 'UTF-8'
   it.fork = true
 }
